@@ -3,6 +3,8 @@ package com.challenge.rental_cars_spring_api.core.queries;
 import com.challenge.rental_cars_spring_api.core.domain.Aluguel;
 import com.challenge.rental_cars_spring_api.core.domain.Carro;
 import com.challenge.rental_cars_spring_api.core.domain.Cliente;
+import com.challenge.rental_cars_spring_api.core.domain.exceptions.FileCannotEmptyException;
+import com.challenge.rental_cars_spring_api.core.domain.exceptions.InvalidFileFormatException;
 import com.challenge.rental_cars_spring_api.core.domain.exceptions.NotFoundException;
 import com.challenge.rental_cars_spring_api.core.queries.dtos.CustomMessageDTO;
 import com.challenge.rental_cars_spring_api.infrastructure.repositories.AluguelRepository;
@@ -40,6 +42,15 @@ public class ImportarRelatorioAluguelQuery {
 
     // Método para processar o arquivo de aluguel
     public void execute(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new FileCannotEmptyException("O arquivo está vazio ou no formato inválido.");
+        }
+
+        // Verificando se o arquivo tem o formato .rtn
+        String fileName = file.getOriginalFilename();
+        if (fileName == null || !fileName.endsWith(".rtn")) {
+            throw new InvalidFileFormatException("Formato de arquivo inválido. Apenas arquivos .rtn são aceitos.");
+        }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String linha;
