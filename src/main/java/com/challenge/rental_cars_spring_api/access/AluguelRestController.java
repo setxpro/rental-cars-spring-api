@@ -43,7 +43,7 @@ public class AluguelRestController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ListarAlugueisQueryResultItem.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)})})
-    public ResponseEntity<List<ListarAlugueisQueryResultItem>> listaralugueis() {
+    public ResponseEntity<List<ListarAlugueisQueryResultItem>> listarAlugueis() {
         return new ResponseEntity<>(listarAlugueisQuery.execute(), HttpStatus.OK);
     }
 
