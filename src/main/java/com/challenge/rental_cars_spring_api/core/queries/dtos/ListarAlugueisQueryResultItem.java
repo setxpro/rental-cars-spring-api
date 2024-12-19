@@ -1,6 +1,7 @@
 package com.challenge.rental_cars_spring_api.core.queries.dtos;
 
 import com.challenge.rental_cars_spring_api.core.domain.Aluguel;
+import com.challenge.rental_cars_spring_api.core.domain.exceptions.InvalidPhoneNumberException;
 import com.challenge.rental_cars_spring_api.core.enums.PagoEnum;
 
 import java.math.BigDecimal;
@@ -45,6 +46,7 @@ public record ListarAlugueisQueryResultItem(
                     parte3,
                     parte4);
         }
-        return telefone;
+
+        throw new InvalidPhoneNumberException("Formato de telefone inválido.");
     }
 }
