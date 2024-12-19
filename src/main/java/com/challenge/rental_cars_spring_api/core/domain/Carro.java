@@ -1,9 +1,7 @@
 package com.challenge.rental_cars_spring_api.core.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,8 +9,10 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "carro")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Carro implements Serializable {
 
     @Id
