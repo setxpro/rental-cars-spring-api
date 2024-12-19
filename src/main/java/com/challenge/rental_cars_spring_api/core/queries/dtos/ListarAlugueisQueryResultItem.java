@@ -6,28 +6,36 @@ import com.challenge.rental_cars_spring_api.core.enums.PagoEnum;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public record ListarAlugueisQueryResultItem(
-        Date dataAluguel,            // Data do aluguel
-        String modelo,                // Modelo do carro
-        Integer km,                   // Quilometragem do carro
-        String nomeCliente,           // Nome do cliente
-        String telefoneCliente,       // Telefone do cliente no formato +XX(XX)XXXXX-XXXX
-        Date dataDevolucao,           // Data de devolução
-        BigDecimal valor,             // Valor do aluguel
-        PagoEnum pago                 // Status de pagamento (SIM/NAO)
+        List<AluguelDTO> alugueis,               // lista de alugueis
+        BigDecimal totalNaoPago
 ) {
-    public static ListarAlugueisQueryResultItem from(Aluguel aluguel) {
-        return new ListarAlugueisQueryResultItem(
-                aluguel.getDataAluguel(),                            // Data do aluguel
-                aluguel.getCarroId().getModelo(),                   // Modelo do carro
-                aluguel.getCarroId().getKm(),                       // Quilometragem do carro
-                aluguel.getClienteId().getNome(),                   // Nome do cliente
-                formatarTelefone(aluguel.getClienteId().getTelefone()), // Formato do telefone
-                aluguel.getDataDevolucao(),                        // Data de devolução
-                aluguel.getValor(),                                // Valor do aluguel
-                aluguel.isPago() ? PagoEnum.SIM : PagoEnum.NAO      // Status de pagamento
-        );
+    public static ListarAlugueisQueryResultItem from(List<Aluguel> alugueis) {
+
+        // Mapeia cada aluguel para o DTO
+        List<AluguelDTO> alugueisDTO = alugueis.stream()
+                .map(aluguel -> new AluguelDTO(
+                        aluguel.getDataAluguel(),
+                        aluguel.getCarroId().getModelo(),
+                        aluguel.getCarroId().getKm(),
+                        aluguel.getClienteId().getNome(),
+                        formatarTelefone(aluguel.getClienteId().getTelefone()),
+                        aluguel.getDataDevolucao(),
+                        aluguel.getValor(),
+                        aluguel.isPago() ? PagoEnum.SIM : PagoEnum.NAO
+                ))
+                .collect(Collectors.toList());
+
+        // Cálculo do valor total ainda não pago
+        BigDecimal naoPago = alugueis.stream()
+                .filter(aluguel -> !aluguel.isPago())
+                .map(Aluguel::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new ListarAlugueisQueryResultItem(alugueisDTO, naoPago);
     }
 
     // Método privado para formatar o telefone no formato desejado
