@@ -2,6 +2,7 @@ package com.challenge.rental_cars_spring_api.access;
 
 import com.challenge.rental_cars_spring_api.core.queries.ImportarRelatorioAluguelQuery;
 import com.challenge.rental_cars_spring_api.core.queries.ListarAlugueisQuery;
+import com.challenge.rental_cars_spring_api.core.queries.dtos.CustomMessageDTO;
 import com.challenge.rental_cars_spring_api.core.queries.dtos.ListarAlugueisQueryResultItem;
 import com.challenge.rental_cars_spring_api.core.queries.dtos.ListarCarrosQueryResultItem;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,7 +35,7 @@ public class AluguelRestController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     public ResponseEntity<?> importarRelatorioAluguel(@RequestParam("file") MultipartFile file) throws IOException {
         importarRelatorioAluguelQuery.execute(file);
-        return new ResponseEntity<>(ResponseEntity.ok(), HttpStatus.OK);
+        return new ResponseEntity<>(new CustomMessageDTO("Relatório importado com sucesso.", 201), HttpStatus.OK);
     }
 
     @GetMapping

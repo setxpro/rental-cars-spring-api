@@ -40,8 +40,6 @@ public class ImportarRelatorioAluguelQuery {
 
     // Método para processar o arquivo de aluguel
     public void execute(MultipartFile file) throws IOException {
-        List<String> erros = new ArrayList<>();
-        int linhasProcessadas = 0;
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String linha;
@@ -82,7 +80,6 @@ public class ImportarRelatorioAluguelQuery {
                             aluguel.setValor(valorTotal);
 
                             aluguelRepository.save(aluguel);
-                            linhasProcessadas++;
                         } else {
                             log.warn("Carro ou Cliente não encontrado. Linha: {}", linha);
                         }
